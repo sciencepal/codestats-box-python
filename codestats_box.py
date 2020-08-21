@@ -131,13 +131,20 @@ def __get_language_xp_line(
 
 
 def get_language_xp_lines(
-    code_stats_response: Dict[str, Any], recent: bool = True
+    code_stats_response: Dict[str, Any], recent: str = "level-xp"
 ) -> List[TitleAndValue]:
-    top_languages = sorted(
-        code_stats_response[CODE_STATS_LANGUAGES_KEY].items(),
-        key=lambda t: t[1][CODE_STATS_LANGUAGES_XP_KEY],
-        reverse=True,
-    )[:TOP_LANGUAGES_COUNT]
+    if recent == STATS_TYPE_RECENT_XP:
+        top_languages = sorted(
+            code_stats_response[CODE_STATS_LANGUAGES_KEY].items(),
+            key=lambda t: t[1][CODE_STATS_LANGUAGES_NEW_XP_KEY],
+            reverse=True,
+        )[:TOP_LANGUAGES_COUNT]
+    else:
+        top_languages = sorted(
+            code_stats_response[CODE_STATS_LANGUAGES_KEY].items(),
+            key=lambda t: t[1][CODE_STATS_LANGUAGES_XP_KEY],
+            reverse=True,
+        )[:TOP_LANGUAGES_COUNT]
     return [
         __get_language_xp_line(language, stats, recent)
         for language, stats in top_languages
